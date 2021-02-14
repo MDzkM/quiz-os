@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const client = new Discord.Client()
 
+const { DISCORD_TOKEN } = process.env.NODE_ENV === 'production' ? process.env : require('./config.json')
 const command = require('./command')
 
 client.on('ready', () => {
@@ -11,4 +12,4 @@ client.on('ready', () => {
     })
 })
 
-client.login(process.env.DISCORD_TOKEN)
+client.login(DISCORD_TOKEN)

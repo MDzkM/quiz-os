@@ -98,55 +98,23 @@ const { DISCORD_TOKEN } = process.env.NODE_ENV === 'production' ? process.env : 
 // Import command handler modules
 const commandOnGuildMemberAdd = require('./modules/commandOnGuildMemberAdd')
 const commandOnMessage = require('./modules/commandOnMessage')
-// const privateCommand = require('./modules/private-command')
 
 //import custom services modules
 const utils = require('./services/utils') 
-// const messages = require('../routes/messages')
 
 const myIntents = new Intents(Intents.ALL)
-myIntents.remove('GUILD_PRESENCES')
 const client = new Client({ ws: { intents: myIntents } })
 
 client.on('ready', () => {
     console.log('Bot Online!')
 
-    // commandOnGuildMemberAdd(client)
+    commandOnGuildMemberAdd(client, utils.greet)
 
-    // commandOnMessage(client, ['test', 'ping'], utils.testSendChannel)
-
-    // commandOnMessage(client, ['clear', 'c'], utils.clear, true)
+    commandOnMessage(client, ['register', 'r'], utils.register)
 
     commandOnMessage(client, ['answer', 'a'], utils.sendAnswer)
-
-    // command(client, ['register', 'reg', 'r'], register)
-
-    // privateCommand(client, ['answer', 'ans'], getTime(), (message, trimmedContent, time) => {
-    //   messages.updateMessages(message.channel.recipient.id, trimmedContent, time)
-    // })
-
-    // command(client, ['register', 'reg'], (message, trimmedContent) => {
-    //   // console.log(client.guilds.cache.get('768098086030934037'))
-    //   if (trimmedContent.split(" ").length === 4) {
-    //     if (!isNaN(parseInt(trimmedContent[3]))) {
-    //       console.log(client.guilds)
-    //         // message.author.setNickname({
-    //         //   nick: `${trimmedContent[0].toUpperCase()} - ${trimmedContent[1].toUpperCase()} - ${capitalize(trimmedContent[2])} - ${trimmedContent[3]}`
-    //         // })
-    //       // client.guilds.cache.get('768098086030934037').members.cache.get(message.channel.recipient.id).setNickname(`${trimmedContent[0].toUpperCase()} - ${trimmedContent[1].toUpperCase()} - ${capitalize(trimmedContent[2])} - ${trimmedContent[3]}`)
-    //     } else {
-    //       message.author.send('The Student ID parameter must contain numbers only!')
-    //     }
-    //   } else {
-    //     message.author.send("The !register or !reg command requires the following 4 parameters: Class, Lecturer's Assistant Code, Name, and Student ID in that exact order.")
-    //   }
-    // })
-
-    // privateCommand(client, 'members', (message) => {
-    //     client.guilds.cache.forEach((guild) => {
-    //         message.channel.send(`${guild.name} has a total of ${guild.memberCount} members`)
-    //     })
-    // })
+    
+    commandOnMessage(client, ['clear', 'c'], utils.clear, false, true)
 })
 
 client.login(DISCORD_TOKEN)

@@ -1,0 +1,153 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('server:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '9000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+// Discord Bot code starts here ================================================
+
+// Import Discord API and token
+const { Client, Intents } = require('discord.js')
+const { DISCORD_TOKEN } = process.env.NODE_ENV === 'production' ? process.env : require('../config.json')
+
+// Import command handler modules
+const commandOnGuildMemberAdd = require('./modules/commandOnGuildMemberAdd')
+const commandOnMessage = require('./modules/commandOnMessage')
+// const privateCommand = require('./modules/private-command')
+
+//import custom services modules
+const utils = require('./services/utils') 
+// const messages = require('../routes/messages')
+
+const myIntents = new Intents(Intents.ALL)
+myIntents.remove('GUILD_PRESENCES')
+const client = new Client({ ws: { intents: myIntents } })
+
+client.on('ready', () => {
+    console.log('Bot Online!')
+
+    // commandOnGuildMemberAdd(client)
+
+    // commandOnMessage(client, ['test', 'ping'], utils.testSendChannel)
+
+    // commandOnMessage(client, ['clear', 'c'], utils.clear, true)
+
+    commandOnMessage(client, ['answer', 'a'], utils.sendAnswer)
+
+    // command(client, ['register', 'reg', 'r'], register)
+
+    // privateCommand(client, ['answer', 'ans'], getTime(), (message, trimmedContent, time) => {
+    //   messages.updateMessages(message.channel.recipient.id, trimmedContent, time)
+    // })
+
+    // command(client, ['register', 'reg'], (message, trimmedContent) => {
+    //   // console.log(client.guilds.cache.get('768098086030934037'))
+    //   if (trimmedContent.split(" ").length === 4) {
+    //     if (!isNaN(parseInt(trimmedContent[3]))) {
+    //       console.log(client.guilds)
+    //         // message.author.setNickname({
+    //         //   nick: `${trimmedContent[0].toUpperCase()} - ${trimmedContent[1].toUpperCase()} - ${capitalize(trimmedContent[2])} - ${trimmedContent[3]}`
+    //         // })
+    //       // client.guilds.cache.get('768098086030934037').members.cache.get(message.channel.recipient.id).setNickname(`${trimmedContent[0].toUpperCase()} - ${trimmedContent[1].toUpperCase()} - ${capitalize(trimmedContent[2])} - ${trimmedContent[3]}`)
+    //     } else {
+    //       message.author.send('The Student ID parameter must contain numbers only!')
+    //     }
+    //   } else {
+    //     message.author.send("The !register or !reg command requires the following 4 parameters: Class, Lecturer's Assistant Code, Name, and Student ID in that exact order.")
+    //   }
+    // })
+
+    // privateCommand(client, 'members', (message) => {
+    //     client.guilds.cache.forEach((guild) => {
+    //         message.channel.send(`${guild.name} has a total of ${guild.memberCount} members`)
+    //     })
+    // })
+})
+
+client.login(DISCORD_TOKEN)
+// Discord bot code ends here ==================================================

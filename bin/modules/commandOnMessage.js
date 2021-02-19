@@ -1,6 +1,6 @@
 const { PREFIX } = process.env.NODE_ENV === 'production' ? process.env : require('../../config.json')
 
-module.exports = (client, aliases, callback, noParam=false, dmOnly=true) => {
+module.exports = (client, aliases, callback, noParam=false, dmOnly=true, restricted=false) => {
     if (typeof aliases === 'string') {
         aliases = [aliases]
     }
@@ -21,7 +21,9 @@ module.exports = (client, aliases, callback, noParam=false, dmOnly=true) => {
             if (content.startsWith(`${command} `) || content === command) {
                 if (dmOnly && message.channel.type === 'dm') {
                     noParam ? callback(message) : callback(client, message, trimmedContent)
-                } else if (!dmOnly && message.channel.type !== 'dm') {
+                } else if (!dmOnly && !restricted && message.channel.type !== 'dm') {
+                    noParam ? callback(message) : callback(client, message, trimmedContent)
+                } else if (restricted && message.channel.id === '812203917689225216') {
                     noParam ? callback(message) : callback(client, message, trimmedContent)
                 }
             }

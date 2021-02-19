@@ -97,6 +97,19 @@ const sendAnswer = async (client, message, trimmedContent) => {
     targetChannel.send(answer)
 }
 
+const sendQuestion = async (client, message, trimmedContent) => {
+    const targetServer = client.guilds.cache.get('809336749977239572')
+    const senderID = message.channel.recipient.id
+    let senderNickname
+    await targetServer.members.fetch(senderID).then(member => senderNickname = member.nickname)
+    
+    const targetChannel = client.channels.cache.get('811241341589389404')
+    const question = `${trimmedContent}`
+    targetChannel.send(question).then(question => {
+        question.react("⬆")
+    })
+}
+
 const clear = message => {
     if (message.member.hasPermission('ADMINISTRATOR')) {
         message.channel.messages.fetch().then(results => {
@@ -109,4 +122,5 @@ exports.roleClaimClass = roleClaimClass
 exports.greet = greet
 exports.register = register
 exports.sendAnswer = sendAnswer
+exports.sendQuestion = sendQuestion
 exports.clear = clear

@@ -114,6 +114,8 @@ client.on('ready', () => {
 
     commandOnMessage(client, ['answer', 'a'], utils.sendAnswer)
     
+    commandOnMessage(client, ['question', 'q'], utils.sendQuestion)
+    
     commandOnMessage(client, ['clear', 'c'], utils.clear, false, true)
 })
 

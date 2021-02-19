@@ -96,6 +96,7 @@ const { Client, Intents } = require('discord.js')
 const { DISCORD_TOKEN } = process.env.NODE_ENV === 'production' ? process.env : require('../config.json')
 
 // Import command handler modules
+const commandOnReady = require('./modules/commandOnReady')
 const commandOnGuildMemberAdd = require('./modules/commandOnGuildMemberAdd')
 const commandOnMessage = require('./modules/commandOnMessage')
 
@@ -108,7 +109,9 @@ const client = new Client({ ws: { intents: myIntents } })
 client.on('ready', () => {
     console.log('Bot Online!')
 
-    commandOnGuildMemberAdd(client, utils.roleClaimClass)
+    commandOnReady(client)
+
+    commandOnGuildMemberAdd(client)
 
     commandOnMessage(client, ['register', 'r'], utils.register)
 

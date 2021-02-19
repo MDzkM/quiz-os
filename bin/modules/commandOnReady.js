@@ -1,0 +1,10 @@
+const utils = require('../services/utils')
+
+module.exports = (client) => {
+    const greetingText = "Welcome to **Operating Systems 211**!\n\nI have sent you a Direct Message to help with the registration process. To check your DMs, click on the top-left icon of Discord and click on the name **Helper OS**. From there I will provide you with further instructions on how to register and make use of my features!\n\nAfter finishing your registration, return here to give a rating for my service.\n\nDon't forget to check the <#812346416935469066> channel for the general rules of this server.\n\n**Thank you!** \n\nHow is your experience so far in this server?\n\nPlease select one of the values below ranging from least satisfied (1) to most satisfied (10).\n\n_This scale only serves as feedback and anonymous by nature._"
+    const greetingReactions = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+    utils.sendDefaultMessage(client, '811236649764782110', greetingText, greetingReactions)
+
+    const rulesAndInfoText = "⚠ Rules Discord **Operating Systems 211** ⚠\n\n**1**. Menggunakan channel sesuai dengan kelas masing-masing, dan tidak boleh melenceng dari konteks tujuan channel tersebut.\n\n**2**. Menggunakan nickname dengan format **Kelas-Kode Asdos-Nama Lengkap**. Harap cek channel <#811236649764782110> untuk panduan.\n\n**3**. Jangan menggunakan mention @everyone, sebaiknya gunakan <@&809337568687554571> atau tag yang sesuai.\n\n**4**. Jangan melakukan tindakan yang dapat melanggar peraturan akademik fakultas dan mata kuliah OS.\n\n**5**. Gunakan bahasa yang sopan dan tidak mengandung SARA/pornografi.\n\n**6**. Diperbolehkan menggunakan voice channel untuk kepentingan belajar bersama dengan sepengetahuan asdos atau dosen.\n\n**7**. Tidak diperbolehkan menyamar menjadi orang lain, dengan tujuan hiburan atau lainnya.\n\n**8**. Harap menjaga ketertiban di dalam channel.\n\n**9**. Tetap menjaga integritas dan menghindari plagiarisme ketika belajar bersama."
+    utils.sendDefaultMessage(client, '812346416935469066', rulesAndInfoText)
+}

@@ -5,11 +5,22 @@ const classes = {
     B: '811533539957932064',
     C: '811533545859973142',
 }
-const assistantCodes = ['EU', 'FA', 'GSW', 'LY', 'DZ', 'MYM', 'NAD', 'PS', 'MAN', 'TAZ', 'ZB']
-
-// const generateColor = () => `#${Math.floor(Math.random()*16777215).toString(16)}`
+const assistantCodes = {
+    EU: '812208846046756874',
+    FA: '812208851403014164',
+    GSW: '812208856868454420',
+    LY: '812208861405904926',
+    DZ: '812208865344749578',
+    MYM: '812208870331252757',
+    NAD: '812208875494703104',
+    PS: '812208878803484674',
+    MAN: '812208882776408084',
+    TAZ: '812208886324396032',
+    ZB: '812209048778178578'
+}
 
 const capitalize = input => input.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))
+
 const hasNumber = input => /\d/.test(input)
 
 const getTime = () => {
@@ -22,24 +33,28 @@ const getTime = () => {
     return hours + ':' + minutes + ':' + seconds
 }
 
-
-const greet = () => {
-
+const addReactions = (message, reactions) => {
+    if (reactions.length === 0) { return }
+    message.react(reactions[0])
+    reactions.shift()
+    if (reactions.length > 0) {
+        setTimeout(() => addReactions(message, reactions), 750)
+    }
 }
 
-const roleClaimClass = (client, member) => {
-    const getEmoji = emojiID => client.emojis.cache.find(emoji => emoji.id === emojiID)
-    const message = "Before we begin, let's start by choosing your class. Pick one of the reactions below that corresponds with your **Operating Systems** class!"
-    member.send(message)
-        // .then(response => {
-        //     response.react(`${getEmoji('812296347721531443')}`)
-        //     response.react(`${getEmoji('812296619507843102')}`)
-        //     response.react(`${getEmoji('812296678299140136')}`)
-        // })
-}
+const sendDefaultMessage = async (client, channelID, text, reactions=[]) => {
+    const channel = await client.channels.fetch(channelID)
 
-const roleClaimAssistant = () => {
-
+    channel.messages.fetch().then(messages => {
+        if (messages.size === 0) {
+            channel.send(text).then(message => addReactions(message, reactions))
+        } else {
+            for (const message of messages) {
+                message[1].edit(text)
+                addReactions(message[1], reactions)
+            }
+        }
+    })
 }
 
 const register = async (client, message, trimmedContent) => {
@@ -65,7 +80,7 @@ const register = async (client, message, trimmedContent) => {
         return
     }
 
-    if (!assistantCodes.includes(assistantCode)) {
+    if (!Object.keys(assistantCodes).includes(assistantCode)) {
         message.author.send("The assistant code must be either **EU** , **GSW** , **LY** , **DZ** , **MYM** , **NAD** , **PS** , **MAN** , **TAZ** , **ZB** .")
         return
     }
@@ -74,8 +89,6 @@ const register = async (client, message, trimmedContent) => {
         message.author.send("Student name must not contain number of symbols.")
         return
     }
-
-    const targetRole = targetServer.roles.cache.get(classes[classCode])
 
     const nickname = `${classCode} - ${assistantCode} - ${studentName}`
 
@@ -89,12 +102,18 @@ const register = async (client, message, trimmedContent) => {
         }
     })
     
+    let targetRole = targetServer.roles.cache.get(classes[classCode])
+    sender.roles.add(targetRole).catch(console.error)
+    
+    targetRole = targetServer.roles.cache.get(assistantCodes[assistantCode])
+    sender.roles.add(targetRole).catch(console.error)
+    
+    targetRole = targetServer.roles.cache.get('811580431261499422')
     sender.roles.add(targetRole).catch(console.error)
     
     const registerLog = `${githubUsername};${studentEmail};${classCode};${studentID};${studentName}`
     const targetChannel = client.channels.cache.get('812315943006240818')
     targetChannel.send(registerLog)
-
 }
 
 const sendAnswer = async (client, message, trimmedContent) => {
@@ -129,8 +148,7 @@ const clear = message => {
     }
 }
 
-exports.roleClaimClass = roleClaimClass
-exports.greet = greet
+exports.sendDefaultMessage = sendDefaultMessage
 exports.register = register
 exports.sendAnswer = sendAnswer
 exports.sendQuestion = sendQuestion

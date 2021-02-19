@@ -5,7 +5,7 @@ const classes = {
     B: '811533539957932064',
     C: '811533545859973142',
 }
-const assistantCodes = ['EU', 'GSW', 'LY', 'DZ', 'MYM', 'NAD', 'PS', 'MAN', 'TAZ', 'ZB']
+const assistantCodes = ['EU', 'FA', 'GSW', 'LY', 'DZ', 'MYM', 'NAD', 'PS', 'MAN', 'TAZ', 'ZB']
 
 // const generateColor = () => `#${Math.floor(Math.random()*16777215).toString(16)}`
 
@@ -23,6 +23,19 @@ const getTime = () => {
 }
 
 const greet = () => {
+
+}
+
+const roleClaimClass = async() => {
+    const targetServer = client.guilds.cache.get('809336749977239572')
+    const senderID = '408223553180139522'
+    let member
+    await targetServer.members.fetch(senderID).then(sender => member = sender)
+    
+    member.send("Before you start, choose one from the reactions below that corresponds your class!")
+}
+
+const roleClaimAssistant = () => {
 
 }
 
@@ -92,6 +105,7 @@ const clear = message => {
     }
 }
 
+exports.roleClaimClass = roleClaimClass
 exports.greet = greet
 exports.register = register
 exports.sendAnswer = sendAnswer

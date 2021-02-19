@@ -1,6 +1,6 @@
 const { PREFIX } = process.env.NODE_ENV === 'production' ? process.env : require('../../config.json')
 
-module.exports = (client, aliases, callback, dmOnly=true, noParam=false) => {
+module.exports = (client, aliases, callback, noParam=false, dmOnly=true) => {
     if (typeof aliases === 'string') {
         aliases = [aliases]
     }

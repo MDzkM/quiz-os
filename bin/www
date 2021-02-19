@@ -110,6 +110,8 @@ client.on('ready', () => {
 
     commandOnGuildMemberAdd(client, utils.greet)
 
+    commandOnMessage(client, ['test', 't'], utils.roleClaimClass)
+
     commandOnMessage(client, ['register', 'r'], utils.register)
 
     commandOnMessage(client, ['answer', 'a'], utils.sendAnswer)

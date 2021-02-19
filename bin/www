@@ -108,9 +108,7 @@ const client = new Client({ ws: { intents: myIntents } })
 client.on('ready', () => {
     console.log('Bot Online!')
 
-    commandOnGuildMemberAdd(client, utils.greet)
-
-    commandOnMessage(client, ['test', 't'], utils.roleClaimClass)
+    commandOnGuildMemberAdd(client, utils.roleClaimClass)
 
     commandOnMessage(client, ['register', 'r'], utils.register)
 
@@ -118,7 +116,7 @@ client.on('ready', () => {
     
     commandOnMessage(client, ['question', 'q'], utils.sendQuestion)
     
-    commandOnMessage(client, ['clear', 'c'], utils.clear, false, true)
+    commandOnMessage(client, ['clear', 'c'], utils.clear, true, false)
 })
 
 client.login(DISCORD_TOKEN)

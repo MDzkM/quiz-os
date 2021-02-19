@@ -22,17 +22,20 @@ const getTime = () => {
     return hours + ':' + minutes + ':' + seconds
 }
 
+
 const greet = () => {
 
 }
 
-const roleClaimClass = async() => {
-    const targetServer = client.guilds.cache.get('809336749977239572')
-    const senderID = '408223553180139522'
-    let member
-    await targetServer.members.fetch(senderID).then(sender => member = sender)
-    
-    member.send("Before you start, choose one from the reactions below that corresponds your class!")
+const roleClaimClass = (client, member) => {
+    const getEmoji = emojiID => client.emojis.cache.find(emoji => emoji.id === emojiID)
+    const message = "Before we begin, let's start by choosing your class. Pick one of the reactions below that corresponds with your **Operating Systems** class!"
+    member.send(message)
+        // .then(response => {
+        //     response.react(`${getEmoji('812296347721531443')}`)
+        //     response.react(`${getEmoji('812296619507843102')}`)
+        //     response.react(`${getEmoji('812296678299140136')}`)
+        // })
 }
 
 const roleClaimAssistant = () => {
@@ -50,9 +53,12 @@ const register = async (client, message, trimmedContent) => {
         return
     }
 
-    const classCode = trimmedContent[0].toUpperCase()
-    const assistantCode = trimmedContent[1].toUpperCase()
-    const studentName = capitalize(trimmedContent.slice(2).join(" "))
+    const githubUsername = trimmedContent[0]
+    const studentEmail = trimmedContent[1]
+    const classCode = trimmedContent[2].toUpperCase()
+    const studentID = trimmedContent[3]
+    const assistantCode = trimmedContent[4].toUpperCase()
+    const studentName = capitalize(trimmedContent.slice(5).join(" "))
 
     if (!Object.keys(classes).includes(classCode)) {
         message.author.send("The class code must be either **A** , **B** , or **C** .")
@@ -84,6 +90,11 @@ const register = async (client, message, trimmedContent) => {
     })
     
     sender.roles.add(targetRole).catch(console.error)
+    
+    const registerLog = `${githubUsername};${studentEmail};${classCode};${studentID};${studentName}`
+    const targetChannel = client.channels.cache.get('812315943006240818')
+    targetChannel.send(registerLog)
+
 }
 
 const sendAnswer = async (client, message, trimmedContent) => {

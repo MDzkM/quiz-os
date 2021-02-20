@@ -7,11 +7,11 @@ const buyMeACoffeeEmbed = new MessageEmbed()
 	.setDescription('If you like what you are seeing, please consider supporting us using the link above.\n\n_Click the title of this embedded message_')
 	.setImage('https://cdn.buymeacoffee.com/buttons/v2/default-blue.png')
 
-const classes = {
-    A: '811530070090317834',
-    B: '811533539957932064',
-    C: '811533545859973142',
-}
+// const classes = {
+//     A: '811530070090317834',
+//     B: '811533539957932064',
+//     C: '811533545859973142',
+// }
 
 const assistantCodes = {
     EU: '812208846046756874',
@@ -129,7 +129,8 @@ const register = (client, message, trimmedContent) => {
             return
         }
     
-        let nickname = trimNickname(`${classCode} - ${studentName}`)
+        // let nickname = trimNickname(`${classCode} - ${studentName}`)
+        let nickname = trimNickname(`${githubUsername} - ${studentName}`)
     
         let sender
         await targetServer.members.fetch(senderID).then(member => sender = member)
@@ -141,8 +142,8 @@ const register = (client, message, trimmedContent) => {
             }
         })
         
-        let targetRole = targetServer.roles.cache.get(classes[classCode])
-        sender.roles.add(targetRole).catch(console.error)
+        // let targetRole = targetServer.roles.cache.get(classes[classCode])
+        // sender.roles.add(targetRole).catch(console.error)
         
         targetRole = targetServer.roles.cache.get('811580431261499422')
         sender.roles.add(targetRole).catch(console.error)
@@ -169,7 +170,8 @@ const setAssistant =  async (client, message, trimmedContent) => {
     let sender
     await targetServer.members.fetch(senderID).then(member => sender = member)
     const oldNickname = sender.nickname.toString()
-    let newNickname = trimNickname(oldNickname.slice(0, 1) + ` - ${assistantCode}` + oldNickname.slice(1))
+    // let newNickname = trimNickname(oldNickname.slice(0, 1) + ` - ${assistantCode}` + oldNickname.slice(1))
+    let newNickname = trimNickname(`${assistantCode} - ${oldNickname.slice(1)}`)
 
     sender.setNickname(newNickname)
 

@@ -115,10 +115,14 @@ client.on('ready', () => {
 
     commandOnMessage(client, ['register', 'r'], utils.register)
 
+    commandOnMessage(client, ['set-assistant', 'sa'], utils.setAssistant)
+
     commandOnMessage(client, ['answer', 'a'], utils.sendAnswer)
     
     commandOnMessage(client, ['question', 'q'], utils.sendQuestion)
     
+    commandOnMessage(client, ['help', 'h'], utils.sendHelp, true)
+
     commandOnMessage(client, ['clear', 'c'], utils.clear, true, false)
 })
 

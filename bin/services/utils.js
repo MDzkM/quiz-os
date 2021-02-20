@@ -171,7 +171,7 @@ const setAssistant =  async (client, message, trimmedContent) => {
     await targetServer.members.fetch(senderID).then(member => sender = member)
     const oldNickname = sender.nickname.toString()
     // let newNickname = trimNickname(oldNickname.slice(0, 1) + ` - ${assistantCode}` + oldNickname.slice(1))
-    let newNickname = trimNickname(`${assistantCode} - ${oldNickname.slice}`)
+    let newNickname = trimNickname(`${assistantCode} - ${oldNickname}`)
 
     sender.setNickname(newNickname)
 

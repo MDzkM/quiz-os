@@ -7,11 +7,11 @@ const buyMeACoffeeEmbed = new MessageEmbed()
 	.setDescription('If you like what you are seeing, please consider supporting us using the link above.\n\n_Click the title of this embedded message_')
 	.setImage('https://cdn.buymeacoffee.com/buttons/v2/default-blue.png')
 
-// const classes = {
-//     A: '811530070090317834',
-//     B: '811533539957932064',
-//     C: '811533545859973142',
-// }
+const classes = {
+    A: '811530070090317834',
+    B: '811533539957932064',
+    C: '811533545859973142',
+}
 
 const assistantCodes = {
     EU: '812208846046756874',
@@ -142,8 +142,8 @@ const register = (client, message, trimmedContent) => {
             }
         })
         
-        // let targetRole = targetServer.roles.cache.get(classes[classCode])
-        // sender.roles.add(targetRole).catch(console.error)
+        let targetRole = targetServer.roles.cache.get(classes[classCode])
+        sender.roles.add(targetRole).catch(console.error)
         
         targetRole = targetServer.roles.cache.get('811580431261499422')
         sender.roles.add(targetRole).catch(console.error)

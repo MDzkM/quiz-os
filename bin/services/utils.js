@@ -36,7 +36,7 @@ const isNum = input => /^\d+$/.test(input);
 
 const capitalize = input => input.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))
 
-const alphabetOnly = input => /^[a-zA-Z ]*$/.test(input)
+const isValidName = input => /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/.test(input)
 
 const trimNickname = input => {
     if (input.length > 32) {
@@ -124,7 +124,7 @@ const register = (client, message, trimmedContent) => {
             return
         }
     
-        if (!alphabetOnly(studentName)) {
+        if (!isValidName(studentName)) {
             message.author.send("Student name must not contain number of symbols.")
             return
         }

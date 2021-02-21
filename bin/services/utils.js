@@ -36,7 +36,7 @@ const isNum = input => /^\d+$/.test(input);
 
 const capitalize = input => input.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))
 
-const alphabetOnly = input => /^[a-zA-Z]+$/.test(input)
+const alphabetOnly = input => /^[a-zA-Z ]*$/.test(input)
 
 const trimNickname = input => {
     if (input.length > 32) {

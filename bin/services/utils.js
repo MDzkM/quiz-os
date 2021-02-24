@@ -219,7 +219,7 @@ const sendHelp = message => {
 }
 
 const clear = message => {
-    if (message.member.hasPermission('ADMINISTRATOR')) {
+    if (message.member.roles.cache.some(role => role.id === '809337386185523230') || message.member.roles.cache.some(role => role.id === '809337568687554571')) {
         message.channel.messages.fetch().then(results => {
             message.channel.bulkDelete(results)
         })

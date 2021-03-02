@@ -213,6 +213,14 @@ const sendQuestion = async (client, message, trimmedContent) => {
     message.author.send("Your question has been posted. Remember to check the **<#811241341589389404>** channel for existing questions. If your question has been asked before, upvote it instead of flooding the channel with duplicate questions.")
 }
 
+const sendPost = async (client, message, trimmedContent) => {
+    if (message.member.roles.cache.some(role => role.id === '809337386185523230') || message.member.roles.cache.some(role => role.id === '809337568687554571')) {
+        const targetChannel = client.channels.cache.get('811241716757299210')
+        targetChannel.send(trimmedContent, message.attachments.values().next().value)
+        message.channel.send("Your message was successfully sent. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text).")
+    }
+}
+
 const sendHelp = message => {
     message.author.send("💻 **List of Commands** 💻\n\n**1.** The **Help** Command\n\n`!help` or `!h`\n\nThis command shows this List of Commands.\n\n**2.** The **Register** Command\n\n`!register GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME` or `!r GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME`\n\nThis command is used to register your Discord Account to the OS Discord Server and will automatically change your server nickname and assign roles. Usage: `!r aceyoga yoga@test.com X 1806123456 Yoga Mahendra`\n\n**3.** The **Set Assistant** Command\n\n`!set-assistant ASSISTANT_CODE` or `!sa ASSISTANT_CODE`\n\nThis command is used to assign yourself to the corresponding Lecturer's Assistant. This will also automatically grant you access to assistant specific channels. Usage: `!sa MYM`\n\n**4.** The **Answer** Command\n\n`!answer SENTENCE` or `!a SENTENCE`\n\nThis command records your answer to the system. Used in Live Quiz, and other events. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text). Usage: `!a This is an answer.`\n\n**5.** The **Question** Command\n\n`!question SENTENCE` or `!q SENTENCE`\n\nThis command will post your question anonymously to faq-poll channel. Before you ask a question, please visit the **<#811241341589389404>** channel and make sure your question hasn't been asked previously. If the same question already exists please upvote that question instead of flooding the channel with duplicate questions. Usage: `!q How to use Bash?`\n\nFor more information about this server please visit this link http://bit.ly/os-discord-guide")
     message.author.send(buyMeACoffeeEmbed)
@@ -231,5 +239,6 @@ exports.register = register
 exports.setAssistant = setAssistant
 exports.sendAnswer = sendAnswer
 exports.sendQuestion = sendQuestion
+exports.sendPost = sendPost
 exports.sendHelp = sendHelp
 exports.clear = clear

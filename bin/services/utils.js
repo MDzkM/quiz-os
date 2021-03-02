@@ -195,7 +195,7 @@ const sendAnswer = async (client, message, trimmedContent) => {
     
     const targetChannel = client.channels.cache.get('811206212782653440')
     const answer = `${getTime()} - **${senderNickname}** : ${trimmedContent}`
-    targetChannel.send(answer)
+    targetChannel.send(answer, message.attachments.values().next().value)
     message.author.send("Your message was successfully sent. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text).")
 }
 
@@ -207,7 +207,7 @@ const sendQuestion = async (client, message, trimmedContent) => {
     
     const targetChannel = client.channels.cache.get('811241341589389404')
     const question = `${trimmedContent}`
-    targetChannel.send(question).then(question => {
+    targetChannel.send(question, message.attachments.values().next().value).then(question => {
         question.react("⬆")
     })
     message.author.send("Your question has been posted. Remember to check the **<#811241341589389404>** channel for existing questions. If your question has been asked before, upvote it instead of flooding the channel with duplicate questions.")

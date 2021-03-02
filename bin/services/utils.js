@@ -194,7 +194,7 @@ const sendAnswer = async (client, message, trimmedContent) => {
     await targetServer.members.fetch(senderID).then(member => senderNickname = member.nickname)
     
     const targetChannel = client.channels.cache.get('811206212782653440')
-    const answer = `${getTime()} - **${senderNickname}** : ${trimmedContent}`
+    const answer = `${getTime()} **${senderNickname}** : ${trimmedContent}`
     targetChannel.send(answer, message.attachments.values().next().value)
     message.author.send("Your message was successfully sent. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text).")
 }

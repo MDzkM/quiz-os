@@ -68,6 +68,11 @@ const addReactions = (message, reactions) => {
 
 const getDiff = () => {
     const now = new Date()
+    
+    if (NODE_ENV === 'production') {
+        now.setHours(now.getHours() + 7)
+    }
+
     const tomorrow = new Date(now)
 
     while (tomorrow.getDay() !== 4) {
@@ -75,7 +80,6 @@ const getDiff = () => {
     }
     
     if (NODE_ENV === 'production') {
-        now.setHours(now.getHours() + 1)
         tomorrow.setHours(14)
     } else {
         tomorrow.setHours(7)

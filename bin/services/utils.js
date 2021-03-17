@@ -200,17 +200,19 @@ const sendAnswer = async (client, message, trimmedContent) => {
 }
 
 const sendQuestion = async (client, message, trimmedContent) => {
-    const targetServer = client.guilds.cache.get('809336749977239572')
-    const senderID = message.channel.recipient.id
-    let senderNickname
-    await targetServer.members.fetch(senderID).then(member => senderNickname = member.nickname)
-    
     const targetChannel = client.channels.cache.get('811241341589389404')
-    const question = `${trimmedContent}`
-    targetChannel.send(question, message.attachments.values().next().value).then(question => {
+    targetChannel.send(trimmedContent, message.attachments.values().next().value).then(question => {
         question.react("⬆")
     })
-    message.author.send("Your question has been posted. Remember to check the **<#811241341589389404>** channel for existing questions. If your question has been asked before, upvote it instead of flooding the channel with duplicate questions.")
+    message.author.send("Your question has been posted. Remember to check the **<#811241341589389404>** channel for existing questions. If your question has been asked before, upvote it instead of flooding the channel with duplicate questions. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text).")
+}
+
+const sendSuggestion = async (client, message, trimmedContent) => {
+    const targetChannel = client.channels.cache.get('816896630850584586')
+    targetChannel.send(trimmedContent, message.attachments.values().next().value).then(question => {
+        question.react("⬆")
+    })
+    message.author.send("Your suggestion has been sent. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text).")
 }
 
 const sendPost = async (client, message, trimmedContent) => {
@@ -230,7 +232,8 @@ const scheduleQuiz = async (client, message, trimmedContent) => {
 }
 
 const sendHelp = message => {
-    message.author.send("💻 **List of Commands** 💻\n\n**1.** The **Help** Command\n\n`!help` or `!h`\n\nThis command shows this List of Commands.\n\n**2.** The **Register** Command\n\n`!register GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME` or `!r GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME`\n\nThis command is used to register your Discord Account to the OS Discord Server and will automatically change your server nickname and assign roles. Usage: `!r aceyoga yoga@test.com X 1806123456 Yoga Mahendra`\n\n**3.** The **Set Assistant** Command\n\n`!set-assistant ASSISTANT_CODE` or `!sa ASSISTANT_CODE`\n\nThis command is used to assign yourself to the corresponding Lecturer's Assistant. This will also automatically grant you access to assistant specific channels. Usage: `!sa MYM`\n\n**4.** The **Answer** Command\n\n`!answer SENTENCE` or `!a SENTENCE`\n\nThis command records your answer to the system. Used in Live Quiz, and other events. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text). Usage: `!a This is an answer.`\n\n**5.** The **Question** Command\n\n`!question SENTENCE` or `!q SENTENCE`\n\nThis command will post your question anonymously to faq-poll channel. Before you ask a question, please visit the **<#811241341589389404>** channel and make sure your question hasn't been asked previously. If the same question already exists please upvote that question instead of flooding the channel with duplicate questions. Usage: `!q How to use Bash?`\n\nFor more information about this server please visit this link http://bit.ly/os-discord-guide")
+    message.author.send("💻 **List of Commands** 💻\n\n**1.** The **Help** Command\n\n`!help` or `!h`\n\nThis command shows this List of Commands.\n\n**2.** The **Register** Command\n\n`!register GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME` or `!r GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME`\n\nThis command is used to register your Discord Account to the OS Discord Server and will automatically change your server nickname and assign roles.\n\n**Usage:** `!r aceyoga yoga@test.com X 1806123456 Yoga Mahendra`\n\n**3.** The **Set Assistant** Command\n\n`!set-assistant ASSISTANT_CODE` or `!sa ASSISTANT_CODE`\n\nThis command is used to assign yourself to the corresponding Lecturer's Assistant. This will also automatically grant you access to assistant specific channels.\n\n**Usage:** `!sa MYM`\n\n**4.** The **Answer** Command\n\n`!answer SENTENCE` or `!a SENTENCE`\n\nThis command records your answer to the system. Used in Live Quiz, and other events. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text). You can also send up to **1** image/file in the form of attachment to the command. To attach an image/file you can write the command and before sending it, use the **+** icon on the left of the message box to attach an image/file. Or you can select the attachment first and write the command in the 'Add a comment' box.\n\n**Usage:** `!a This is an answer.`")
+    message.author.send("​\n**5.** The **Question** Command\n\n`!question SENTENCE` or `!q SENTENCE`\n\nThis command will post your question anonymously to **<#811241341589389404>** channel. Before you ask a question, please visit the **<#811241341589389404>** channel and make sure your question hasn't been asked previously. If the same question already exists please upvote that question instead of flooding the channel with duplicate questions. If you are sending characters like \* or \\_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text). You can also send up to **1** image/file in the form of attachment to the command. To attach an image/file you can write the command and before sending it, use the **+** icon on the left of the message box to attach an image/file. Or you can select the attachment first and write the command in the 'Add a comment' box.\n\n**Usage:** `!q How to use Bash?`\n\n**6.** The **Suggest** Command\n\n`!suggest SENTENCE` or `!s SENTENCE`\n\nThis command will send your suggestion anonymously to the **<#816896630850584586>** channel. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text). You can also send up to **1** image/file in the form of attachment to the command. To attach an image/file you can write the command and before sending it, use the **+** icon on the left of the message box to attach an image/file. Or you can select the attachment first and write the command in the 'Add a comment' box.\n\n**Usage:** `!s Make learning more interactive`\n\nFor more information about this server please visit this link http://bit.ly/os-discord-guide")
     message.author.send(buyMeACoffeeEmbed)
 }
 
@@ -247,6 +250,7 @@ exports.register = register
 exports.setAssistant = setAssistant
 exports.sendAnswer = sendAnswer
 exports.sendQuestion = sendQuestion
+exports.sendSuggestion = sendSuggestion
 exports.sendPost = sendPost
 exports.scheduleQuiz = scheduleQuiz
 exports.sendHelp = sendHelp

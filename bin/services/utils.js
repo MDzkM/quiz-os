@@ -1,4 +1,5 @@
 const { NODE_ENV } = process.env.NODE_ENV === 'production' ? process.env : require('../../config.json')
+const { getDiffieHellman } = require('crypto')
 const { MessageEmbed } = require('discord.js')
 
 const buyMeACoffeeEmbed = new MessageEmbed()
@@ -65,6 +66,26 @@ const addReactions = (message, reactions) => {
     }
 }
 
+const getDiff = () => {
+    const now = new Date()
+    const tomorrow = new Date(now)
+
+    while (tomorrow.getDay() !== 4) {
+        tomorrow.setDate(tomorrow.getDate() + 1)
+    }
+    
+    if (NODE_ENV === 'production') {
+        now.setHours(now.getHours() + 1)
+        tomorrow.setHours(14)
+    } else {
+        tomorrow.setHours(7)
+    }
+
+    tomorrow.setMinutes(30)
+
+    return tomorrow - now
+}
+
 const sendDefaultMessage = async (client, channelID, text, reactions=[]) => {
     const channel = await client.channels.fetch(channelID)
 
@@ -102,29 +123,19 @@ const register = (client, message, trimmedContent) => {
         if (res.statusCode !== 200) {
             message.author.send("Github account not found. Please use a valid github username.")
             return
-        }
-
-        if (!validateEmail(studentEmail)) {
+        } else if (!validateEmail(studentEmail)) {
             message.author.send("Please use a valid email format.")
             return
-        }
-    
-        if (!Object.keys(classes).includes(classCode)) {
+        } else if (!Object.keys(classes).includes(classCode)) {
             message.author.send("The class code must be either **A**, **B**, or **C**.")
             return
-        }
-    
-        if (studentID.length !== 10) {
+        } else if (studentID.length !== 10) {
             message.author.send("Student ID is not valid. Length must be 10 digits.")
             return
-        }
-    
-        if (!isNum(studentID)) {
+        } else if (!isNum(studentID)) {
             message.author.send("Student ID must not contain alphabet or symbols.")
             return
-        }
-    
-        if (!isValidName(studentName)) {
+        } else if (!isValidName(studentName)) {
             message.author.send("Student name must not contain number of symbols.")
             return
         }
@@ -188,6 +199,23 @@ const setAssistant =  async (client, message, trimmedContent) => {
 }
 
 const sendAnswer = async (client, message, trimmedContent) => {
+    const checkedContent = trimmedContent.split()
+
+    const uniqueCode = checkedContent[0]
+    const weekCode = checkedContent[1]
+    const questionCode = checkedContent[3]
+
+    if (uniqueCode !== 'ZCZC') {
+        message.author.send("Unique code format is wrong. Please write ZCZC preceeding the other codes and answer.")
+        return
+    } else if (weekCode.slice(0, 1) !== 'W') {
+        message.author.send("Week code format is wrong. Please write WXX after the unique code (ZCZC) with XX being the current week's code (e.g. 00, 01, 02, etc.).")
+        return
+    } else if (questionCode.slice(0, 2) !== 'Q1') {
+        message.author.send("Question code format is wrong. Please write Q1N after the week code (WXX) with N being the corresponding question number (e.g. 1, 2, 3, etc.).")
+        return
+    }
+
     const targetServer = client.guilds.cache.get('809336749977239572')
     const senderID = message.channel.recipient.id
     let senderNickname
@@ -205,6 +233,15 @@ const sendQuestion = async (client, message, trimmedContent) => {
         question.react("⬆")
     })
     message.author.send("Your question has been posted. Remember to check the **<#811241341589389404>** channel for existing questions. If your question has been asked before, upvote it instead of flooding the channel with duplicate questions. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text).")
+
+    const targetServer = client.guilds.cache.get('809336749977239572')
+    const senderID = message.channel.recipient.id
+    let senderNickname
+    await targetServer.members.fetch(senderID).then(member => senderNickname = member.nickname)
+    
+    const targetLogChannel = client.channels.cache.get('821764088572018748')
+    const answer = `**${senderNickname}** : ${trimmedContent}`
+    targetLogChannel.send(answer, message.attachments.values().next().value)
 }
 
 const sendSuggestion = async (client, message, trimmedContent) => {
@@ -213,6 +250,15 @@ const sendSuggestion = async (client, message, trimmedContent) => {
         question.react("⬆")
     })
     message.author.send("Your suggestion has been sent. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text).")
+
+    const targetServer = client.guilds.cache.get('809336749977239572')
+    const senderID = message.channel.recipient.id
+    let senderNickname
+    await targetServer.members.fetch(senderID).then(member => senderNickname = member.nickname)
+    
+    const targetLogChannel = client.channels.cache.get('821764202511335455')
+    const answer = `**${senderNickname}** : ${trimmedContent}`
+    targetLogChannel.send(answer, message.attachments.values().next().value)
 }
 
 const sendPost = async (client, message, trimmedContent) => {
@@ -226,13 +272,15 @@ const sendPost = async (client, message, trimmedContent) => {
 const scheduleQuiz = async (client, message, trimmedContent) => {
     if (message.member.roles.cache.some(role => role.id === '809337386185523230') || message.member.roles.cache.some(role => role.id === '809337568687554571')) {
         const targetChannel = client.channels.cache.get('817658445301284895')
-        targetChannel.send(trimmedContent, message.attachments.values().next().value)
+        setTimeout(() => {
+            targetChannel.send(trimmedContent, message.attachments.values().next().value)
+        }, getDiff())
         message.channel.send("Your message was successfully scheduled. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text).")
     }
 }
 
 const sendHelp = message => {
-    message.author.send("💻 **List of Commands** 💻\n\n**1.** The **Help** Command\n\n`!help` or `!h`\n\nThis command shows this List of Commands.\n\n**2.** The **Register** Command\n\n`!register GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME` or `!r GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME`\n\nThis command is used to register your Discord Account to the OS Discord Server and will automatically change your server nickname and assign roles.\n\n**Usage:** `!r aceyoga yoga@test.com X 1806123456 Yoga Mahendra`\n\n**3.** The **Set Assistant** Command\n\n`!set-assistant ASSISTANT_CODE` or `!sa ASSISTANT_CODE`\n\nThis command is used to assign yourself to the corresponding Lecturer's Assistant. This will also automatically grant you access to assistant specific channels.\n\n**Usage:** `!sa MYM`\n\n**4.** The **Answer** Command\n\n`!answer SENTENCE` or `!a SENTENCE`\n\nThis command records your answer to the system. Used in Live Quiz, and other events. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text). You can also send up to **1** image/file in the form of attachment to the command. To attach an image/file you can write the command and before sending it, use the **+** icon on the left of the message box to attach an image/file. Or you can select the attachment first and write the command in the 'Add a comment' box.\n\n**Usage:** `!a This is an answer.`")
+    message.author.send("💻 **List of Commands** 💻\n\n**1.** The **Help** Command\n\n`!help` or `!h`\n\nThis command shows this List of Commands.\n\n**2.** The **Register** Command\n\n`!register GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME` or `!r GITHUB_USERNAME EMAIL CLASS STUDENT_ID STUDENT_NAME`\n\nThis command is used to register your Discord Account to the OS Discord Server and will automatically change your server nickname and assign roles.\n\n**Usage:** `!r aceyoga yoga@test.com X 1806123456 Yoga Mahendra`\n\n**3.** The **Set Assistant** Command\n\n`!set-assistant ASSISTANT_CODE` or `!sa ASSISTANT_CODE`\n\nThis command is used to assign yourself to the corresponding Lecturer's Assistant. This will also automatically grant you access to assistant specific channels.\n\n**Usage:** `!sa MYM`\n\n**4.** The **Answer** Command\n\n`!answer SENTENCE` or `!a SENTENCE`\n\nThis command records your answer to the system. Used in Live Quiz, and other events. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text). You can also send up to **1** image/file in the form of attachment to the command. To attach an image/file you can write the command and before sending it, use the **+** icon on the left of the message box to attach an image/file. Or you can select the attachment first and write the command in the 'Add a comment' box.\n\n**Usage:** `!a This is an answer.`\n\n**Note:** Currently in this course you are required to use the following format when answering a quiz question, `ZCZC WXX Q1N answer`, with XX being the current week's code (e.g. 00, 01, 02, etc.) and N being the corresponding question number (e.g. 1, 2, 3, etc.). So the actual use case would be something like this: `!a ZCZC W00 Q11 answer`")
     message.author.send("​\n**5.** The **Question** Command\n\n`!question SENTENCE` or `!q SENTENCE`\n\nThis command will post your question anonymously to **<#811241341589389404>** channel. Before you ask a question, please visit the **<#811241341589389404>** channel and make sure your question hasn't been asked previously. If the same question already exists please upvote that question instead of flooding the channel with duplicate questions. If you are sending characters like \* or \\_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text). You can also send up to **1** image/file in the form of attachment to the command. To attach an image/file you can write the command and before sending it, use the **+** icon on the left of the message box to attach an image/file. Or you can select the attachment first and write the command in the 'Add a comment' box.\n\n**Usage:** `!q How to use Bash?`\n\n**6.** The **Suggest** Command\n\n`!suggest SENTENCE` or `!s SENTENCE`\n\nThis command will send your suggestion anonymously to the **<#816896630850584586>** channel. If you are sending characters like \* or \_ don't forget to escape it using the \\\\ character. For example: \\\\\* This is an escaped message \\\\\* (this message will not be converted into a bold text). You can also send up to **1** image/file in the form of attachment to the command. To attach an image/file you can write the command and before sending it, use the **+** icon on the left of the message box to attach an image/file. Or you can select the attachment first and write the command in the 'Add a comment' box.\n\n**Usage:** `!s Make learning more interactive`\n\nFor more information about this server please visit this link http://bit.ly/os-discord-guide")
     message.author.send(buyMeACoffeeEmbed)
 }

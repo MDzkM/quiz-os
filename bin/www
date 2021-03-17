@@ -122,6 +122,8 @@ client.on('ready', () => {
     commandOnMessage(client, ['question', 'q'], utils.sendQuestion)
     
     commandOnMessage(client, ['post', 'p'], utils.sendPost, false, false, true)
+
+    commandOnMessage(client, ['schedule-quiz', 'sq'], utils.scheduleQuiz, false, false, true)
     
     commandOnMessage(client, ['help', 'h'], utils.sendHelp, true)
 

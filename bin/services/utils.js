@@ -143,8 +143,7 @@ const register = (client, message, trimmedContent) => {
             message.author.send("Student name must not contain number of symbols.")
             return
         }
-    
-        // let nickname = trimNickname(`${classCode} - ${studentName}`)
+
         let nickname = trimNickname(`${githubUsername} - ${studentName}`)
     
         let sender
@@ -185,7 +184,6 @@ const setAssistant =  async (client, message, trimmedContent) => {
     let sender
     await targetServer.members.fetch(senderID).then(member => sender = member)
     const oldNickname = sender.nickname.toString()
-    // let newNickname = trimNickname(oldNickname.slice(0, 1) + ` - ${assistantCode}` + oldNickname.slice(1))
     let newNickname = trimNickname(`${assistantCode} - ${oldNickname}`)
 
     sender.setNickname(newNickname)
@@ -203,22 +201,22 @@ const setAssistant =  async (client, message, trimmedContent) => {
 }
 
 const sendAnswer = async (client, message, trimmedContent) => {
-    const checkedContent = trimmedContent.split()
+    // const checkedContent = trimmedContent.split()
 
-    const uniqueCode = checkedContent[0]
-    const weekCode = checkedContent[1]
-    const questionCode = checkedContent[3]
+    // const uniqueCode = checkedContent[0]
+    // const weekCode = checkedContent[1]
+    // const questionCode = checkedContent[3]
 
-    if (uniqueCode !== 'ZCZC') {
-        message.author.send("Unique code format is wrong. Please write ZCZC preceeding the other codes and answer.")
-        return
-    } else if (weekCode.slice(0, 1) !== 'W') {
-        message.author.send("Week code format is wrong. Please write WXX after the unique code (ZCZC) with XX being the current week's code (e.g. 00, 01, 02, etc.).")
-        return
-    } else if (questionCode.slice(0, 2) !== 'Q1') {
-        message.author.send("Question code format is wrong. Please write Q1N after the week code (WXX) with N being the corresponding question number (e.g. 1, 2, 3, etc.).")
-        return
-    }
+    // if (uniqueCode !== 'ZCZC') {
+    //     message.author.send("Unique code format is wrong. Please write ZCZC preceeding the other codes and answer.")
+    //     return
+    // } else if (weekCode.slice(0, 1) !== 'W') {
+    //     message.author.send("Week code format is wrong. Please write WXX after the unique code (ZCZC) with XX being the current week's code (e.g. 00, 01, 02, etc.).")
+    //     return
+    // } else if (questionCode.slice(0, 2) !== 'Q1') {
+    //     message.author.send("Question code format is wrong. Please write Q1N after the week code (WXX) with N being the corresponding question number (e.g. 1, 2, 3, etc.).")
+    //     return
+    // }
 
     const targetServer = client.guilds.cache.get('809336749977239572')
     const senderID = message.channel.recipient.id

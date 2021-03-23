@@ -201,22 +201,27 @@ const setAssistant =  async (client, message, trimmedContent) => {
 }
 
 const sendAnswer = async (client, message, trimmedContent) => {
-    // const checkedContent = trimmedContent.split()
+    const checkedContent = trimmedContent.split(" ")
 
-    // const uniqueCode = checkedContent[0]
-    // const weekCode = checkedContent[1]
-    // const questionCode = checkedContent[3]
+    if (checkedContent.length < 4) {
+        message.author.send("You are required to use the following format when answering a quiz question, `ZCZC WXX Q1N answer`, with XX being the current week's code (e.g. 00, 01, 02, etc.) and N being the corresponding question number (e.g. 1, 2, 3, etc.).")
+        return
+    }
 
-    // if (uniqueCode !== 'ZCZC') {
-    //     message.author.send("Unique code format is wrong. Please write ZCZC preceeding the other codes and answer.")
-    //     return
-    // } else if (weekCode.slice(0, 1) !== 'W') {
-    //     message.author.send("Week code format is wrong. Please write WXX after the unique code (ZCZC) with XX being the current week's code (e.g. 00, 01, 02, etc.).")
-    //     return
-    // } else if (questionCode.slice(0, 2) !== 'Q1') {
-    //     message.author.send("Question code format is wrong. Please write Q1N after the week code (WXX) with N being the corresponding question number (e.g. 1, 2, 3, etc.).")
-    //     return
-    // }
+    const uniqueCode = checkedContent[0]
+    const weekCode = checkedContent[1]
+    const questionCode = checkedContent[2]
+
+    if (uniqueCode !== 'ZCZC') {
+        message.author.send("Unique code format is wrong. Please write ZCZC preceeding the other codes and answer.")
+        return
+    } else if (weekCode.slice(0, 1) !== 'W') {
+        message.author.send("Week code format is wrong. Please write WXX after the unique code (ZCZC) with XX being the current week's code (e.g. 00, 01, 02, etc.).")
+        return
+    } else if (questionCode.slice(0, 2) !== 'Q1') {
+        message.author.send("Question code format is wrong. Please write Q1N after the week code (WXX) with N being the corresponding question number (e.g. 1, 2, 3, etc.).")
+        return
+    }
 
     const targetServer = client.guilds.cache.get('809336749977239572')
     const senderID = message.channel.recipient.id
